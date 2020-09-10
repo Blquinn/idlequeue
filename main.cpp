@@ -6,7 +6,7 @@
 //#include "SQLiteCpp/Statement.h"
 #include "gtkmm.h"
 #include "glibmm.h"
-#include "Window.h"
+#include "window.h"
 #include "idle_queue.h"
 
 static void on_activate (Glib::RefPtr<Gtk::Application> app)

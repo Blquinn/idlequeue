@@ -15,10 +15,9 @@ include_directories(${GTKMM_INCLUDE_DIRS})
 
 add_executable(idlequeue
         main.cpp
-        safe_queue.h
         idle_queue.h
         blocking_queue.h
-        Window.h
+        window.h
         )
 
 target_link_libraries(idlequeue ${GTKMM_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

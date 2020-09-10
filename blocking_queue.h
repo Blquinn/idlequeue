@@ -9,12 +9,13 @@
 #include <mutex>
 #include <condition_variable>
 
-// A thread-safe-queue.
+// A simple thread-safe queue.
+// Synchronization is performed by a mutex.
 template <class T>
-class BlockingQueue
+class SafeQueue
 {
 public:
-    BlockingQueue()
+    SafeQueue()
             : m_queue()
             , m_mutex()
             , m_cond()
@@ -34,15 +35,22 @@ public:
     {
         std::unique_lock<std::mutex> lock(m_mutex);
         while(m_queue.empty())
-        {
-            // release lock as long as the wait and require it afterwards.
             m_cond.wait(lock);
-        }
         T val = m_queue.front();
         m_queue.pop();
         return val;
     }
 
+    // Get the "front"-element.
+    // If the queue is empty it will return a nullopt.
+    std::optional<T> try_dequeue()
+    {
+        std::unique_lock<std::mutex> lock(m_mutex);
+        if (m_queue.empty()) return std::nullopt;
+        T val = m_queue.front();
+        m_queue.pop();
+        return val;
+    }
 private:
     std::queue<T> m_queue;
     mutable std::mutex m_mutex;

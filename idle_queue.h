@@ -5,7 +5,7 @@
 #ifndef IDLEQUEUE_IDLE_QUEUE_H
 #define IDLEQUEUE_IDLE_QUEUE_H
 
-#include "safe_queue.h"
+#include "blocking_queue.h"
 #include "glibmm.h"
 #include <functional>
 #include <optional>
@@ -13,6 +13,9 @@
 
 typedef std::function<void()> q_fn;
 
+/**
+ * IdleQueue allows functions to be called on gtk's main thread from other threads.
+ */
 class IdleQueue
 {
 public:
@@ -46,6 +49,7 @@ private:
             }
             catch (std::exception &e)
             {
+                // TODO: Figure out what to do with errors.
                 std::cout << "Got exception while processing job: " << e.what();
             }
         }
