@@ -16,9 +16,9 @@ class SafeQueue
 {
 public:
     SafeQueue()
-            : m_queue()
-            , m_mutex()
-            , m_cond()
+        : m_queue()
+        , m_mutex()
+        , m_cond()
     {}
 
     // Add an element to the queue.

@@ -12,8 +12,8 @@
 #include "random"
 
 #include "gtkmm.h"
+#include "glibmm.h"
 
-#include "idle_queue.h"
 #include "blocking_queue.h"
 
 
@@ -24,7 +24,6 @@ public:
         , m_box()
         , m_lbl()
         , m_button("Start Jobs")
-        , m_idle_queue()
         , m_blocking_queue()
         , m_progress_bar()
         , m_text_scroll()
@@ -56,7 +55,6 @@ private:
     Gtk::ScrolledWindow m_text_scroll;
     Gtk::TextView m_lbl;
     Gtk::Button m_button;
-    IdleQueue m_idle_queue;
     SafeQueue<std::function<int()>> m_blocking_queue;
     std::thread m_work_thread;
     int m_total_work;
@@ -68,6 +66,11 @@ private:
         adj->set_value(adj->get_upper() - adj->get_page_size());
     }
 
+    bool workCallback(void *data) {
+        std::cout << "Got work callback in thread " << std::this_thread::get_id() << std::endl;
+        return false;
+    }
+
     void work()
     {
         for (;;)
@@ -77,8 +80,8 @@ private:
             int jobNumber = job();
 
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-            m_idle_queue.dispatch([this, jobNumber]() {
+                
+            Glib::signal_idle().connect_once([this, jobNumber](){
                 m_current_work += 1;
                 updateProgress(jobNumber);
                 if (m_current_work == m_total_work)

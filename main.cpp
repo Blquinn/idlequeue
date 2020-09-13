@@ -1,13 +1,8 @@
 #include <iostream>
 
-//#include "controllers/notes_window.h"
-//#include "sqlite3.h"
-//#include "db_executor.h"
-//#include "SQLiteCpp/Statement.h"
 #include "gtkmm.h"
 #include "glibmm.h"
 #include "window.h"
-#include "idle_queue.h"
 
 static void on_activate (Glib::RefPtr<Gtk::Application> app)
 {
@@ -22,9 +17,18 @@ static void on_activate (Glib::RefPtr<Gtk::Application> app)
     window->present();
 }
 
+bool foo(void *user_data) {
+    std::cout << "In idle" << std::endl;
+    return false;
+}
+
 int main (int argc, char *argv[])
 {
     auto app = Gtk::Application::create("org.gnome.Notes", Gio::APPLICATION_FLAGS_NONE);
+
+//    auto func = [](void *data) -> bool {
+//    };
+    g_idle_add(G_SOURCE_FUNC(foo), nullptr);
 
     app->signal_activate().connect(sigc::bind(&on_activate, app));
 

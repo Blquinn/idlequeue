@@ -15,7 +15,6 @@ include_directories(${GTKMM_INCLUDE_DIRS})
 
 add_executable(idlequeue
         main.cpp
-        idle_queue.h
         blocking_queue.h
         window.h
         )
